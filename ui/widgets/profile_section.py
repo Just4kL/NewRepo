@@ -1,0 +1,332 @@
+# ui/widgets/profile_section.py
+"""Секция профиля — компактная карточка с аватаром"""
+
+from PyQt5.QtWidgets import (
+    QGroupBox, QVBoxLayout, QHBoxLayout, QLabel, QPushButton,
+    QProgressBar, QDialog, QSizePolicy
+)
+from PyQt5.QtCore import Qt, QUrl
+from PyQt5.QtGui import QFont, QCursor, QPixmap, QDesktopServices
+from PyQt5.QtNetwork import QNetworkAccessManager, QNetworkRequest
+
+from app.i18n import tr
+
+
+class ProfileSection(QGroupBox):
+    """Секция профиля пользователя с аватаром и статусом."""
+
+    def __init__(self, parent=None):
+        super().__init__(tr("profile_group"), parent)
+        self.parent = parent
+        self.steam_url = ""
+        self.theme = "light"
+        self._avatar_url = ""
+        self.init_ui()
+
+    def init_ui(self):
+        from ui.gui import DESIGN
+
+        # Карточка фиксированной высоты: рост окна ей не достаётся
+        self.setMaximumHeight(DESIGN["profile_max_height"])
+        self.setSizePolicy(QSizePolicy.Preferred, QSizePolicy.Maximum)
+
+        avatar_px = DESIGN["avatar_size"]
+        btn_w, btn_h = DESIGN["action_button"]
+
+        layout = QVBoxLayout(self)
+        layout.setSpacing(4)
+        layout.setContentsMargins(10, 8, 10, 8)
+
+        # ===== ОДНА КОМПАКТНАЯ СТРОКА =====
+        row = QHBoxLayout()
+        row.setSpacing(10)
+
+        # Аватар
+        self.avatar_label = QLabel()
+        self.avatar_label.setFixedSize(avatar_px, avatar_px)
+        self.avatar_label.setScaledContents(True)
+        row.addWidget(self.avatar_label, 0, Qt.AlignVCenter)
+
+        # Информация
+        info_layout = QVBoxLayout()
+        info_layout.setSpacing(1)
+        info_layout.setAlignment(Qt.AlignVCenter)
+
+        # Никнейм (кликабельный)
+        self.nickname_label = QLabel(tr("nickname_default"))
+        self.nickname_label.setCursor(QCursor(Qt.PointingHandCursor))
+        self.nickname_label.setWordWrap(True)
+        font = QFont()
+        font.setPointSize(13)
+        font.setBold(True)
+        self.nickname_label.setFont(font)
+        self.nickname_label.mousePressEvent = self._on_nickname_clicked
+        info_layout.addWidget(self.nickname_label)
+
+        # Статус строка
+        self.status_label = QLabel(
+            f'<span style="color:#9e9e9e;font-size:13px;">●</span> '
+            f'<span style="color:#9e9e9e;">{tr("status_unknown")}</span>'
+        )
+        self.status_label.setWordWrap(True)
+        info_layout.addWidget(self.status_label)
+
+        # "Играет в" (скрыт по умолчанию)
+        self.playing_label = QLabel("")
+        self.playing_label.setWordWrap(True)
+        self.playing_label.setVisible(False)
+        info_layout.addWidget(self.playing_label)
+
+        # Общее время — единая строка
+        self.total_time_label = QLabel("")
+        self.total_time_label.setWordWrap(True)
+        font_time = QFont()
+        font_time.setPointSize(11)
+        self.total_time_label.setFont(font_time)
+        info_layout.addWidget(self.total_time_label)
+
+        row.addLayout(info_layout, 1)
+
+        # Правая колонка: действие + прогресс
+        action_layout = QVBoxLayout()
+        action_layout.setSpacing(4)
+        action_layout.setAlignment(Qt.AlignVCenter)
+
+        self.calc_btn = QPushButton(tr("calc_btn"))
+        self.calc_btn.setObjectName("primary")
+        self.calc_btn.setFont(QFont("Segoe UI Emoji", 11))
+        self.calc_btn.setFixedSize(btn_w, btn_h)
+        self.calc_btn.setEnabled(False)
+        action_layout.addWidget(self.calc_btn)
+
+        self.progress_bar = QProgressBar()
+        self.progress_bar.setFixedSize(btn_w, 14)
+        self.progress_bar.setTextVisible(True)
+        self.progress_bar.setAlignment(Qt.AlignCenter)
+        self.progress_bar.setVisible(False)
+        action_layout.addWidget(self.progress_bar)
+
+        row.addLayout(action_layout, 0)
+        layout.addLayout(row)
+
+        # Сетевой менеджер для аватара создаём лениво: QNetworkAccessManager
+        # тянет Qt5Network + bearer-стек ОС (~15 DLL). Нужен только тогда,
+        # когда профиль проверен и грузится аватар.
+        self._nam = None
+
+        self.apply_theme(self.theme)
+
+    def _on_nickname_clicked(self, event):
+        if not self.steam_url:
+            return
+        self._show_profile_dialog()
+
+    def _show_profile_dialog(self):
+        dialog = QDialog(self.parent)
+        dialog.setWindowTitle(tr("dlg_profile_title"))
+        dialog.setMinimumSize(360, 180)
+        dialog.setMaximumSize(480, 220)
+
+        layout = QVBoxLayout(dialog)
+        layout.setSpacing(16)
+        layout.setContentsMargins(20, 20, 20, 20)
+
+        icon = QLabel("👤")
+        icon.setAlignment(Qt.AlignCenter)
+        font = QFont()
+        font.setPointSize(32)
+        icon.setFont(font)
+        layout.addWidget(icon)
+
+        msg = QLabel(tr("dlg_profile_text").format(self.nickname_label.text()))
+        msg.setAlignment(Qt.AlignCenter)
+        msg.setWordWrap(True)
+        layout.addWidget(msg)
+
+        btn_layout = QHBoxLayout()
+        btn_layout.setSpacing(10)
+
+        no_btn = QPushButton(tr("dlg_cancel"))
+        no_btn.setMinimumHeight(36)
+        no_btn.setMinimumWidth(100)
+        no_btn.clicked.connect(dialog.reject)
+        btn_layout.addWidget(no_btn)
+
+        yes_btn = QPushButton(tr("dlg_profile_go"))
+        yes_btn.setMinimumHeight(36)
+        yes_btn.setMinimumWidth(100)
+        yes_btn.setDefault(True)
+        yes_btn.clicked.connect(lambda: (
+            QDesktopServices.openUrl(QUrl(self.steam_url)), dialog.accept()
+        ))
+        btn_layout.addWidget(yes_btn)
+
+        layout.addLayout(btn_layout)
+
+        is_dark = self.theme == "dark"
+        bg = "#2a2a2a" if is_dark else "#ffffff"
+        text = "#f0f0f0" if is_dark else "#333333"
+        dialog.setStyleSheet(f"""
+            QDialog {{
+                background-color: {bg};
+                color: {text};
+            }}
+            QLabel {{
+                color: {text};
+            }}
+            QPushButton {{
+                background-color: #0066cc;
+                color: white;
+                border: none;
+                border-radius: 8px;
+                font-weight: bold;
+                padding: 6px 16px;
+            }}
+            QPushButton:hover {{
+                background-color: #0055aa;
+            }}
+            QPushButton#secondary {{
+                background-color: #6c757d;
+            }}
+            QPushButton#secondary:hover {{
+                background-color: #5a6268;
+            }}
+        """)
+        no_btn.setObjectName("secondary")
+        dialog.exec_()
+
+    def set_nickname(self, nickname: str, steam_url: str = ""):
+        self.nickname_label.setText(nickname)
+        self.steam_url = steam_url
+
+    def _nam_ensure(self) -> QNetworkAccessManager:
+        """Создаёт QNetworkAccessManager при первом обращении."""
+        if self._nam is None:
+            self._nam = QNetworkAccessManager(self)
+            self._nam.finished.connect(self._on_avatar_loaded)
+        return self._nam
+
+    def set_avatar(self, url: str):
+        self._avatar_url = url
+        if url:
+            request = QNetworkRequest(QUrl(url))
+            self._nam_ensure().get(request)
+        else:
+            self.avatar_label.clear()
+
+    def _on_avatar_loaded(self, reply):
+        if reply.error() == reply.NoError:
+            data = reply.readAll()
+            pixmap = QPixmap()
+            if pixmap.loadFromData(data):
+                from ui.gui import DESIGN
+                avatar_px = DESIGN["avatar_size"]
+                scaled = pixmap.scaled(
+                    avatar_px, avatar_px,
+                    Qt.KeepAspectRatioByExpanding, Qt.SmoothTransformation
+                )
+                self.avatar_label.setPixmap(scaled)
+        reply.deleteLater()
+
+    def set_status(self, status_text: str, color: str = "#9e9e9e", game_name: str = ""):
+        # Запоминаем данные — refresh_type_scale перерисует их под шрифт
+        self._status_text = status_text
+        self._status_color = color
+        self._game_name = game_name
+        self._render_status()
+
+    def _render_status(self):
+        """Рисует статус rich-текстом в масштабе шрифта приложения."""
+        from PyQt5.QtWidgets import QApplication
+        base = QApplication.instance().font().pointSize() or 10
+        dot = max(11, round(base * 1.25))
+        small = max(10, round(base * 1.1))
+        color = getattr(self, "_status_color", "#9e9e9e")
+        status_text = getattr(self, "_status_text", tr("status_unknown"))
+        game_name = getattr(self, "_game_name", "")
+        self.status_label.setText(
+            f'<span style="color:{color};font-size:{dot}px;">●</span> '
+            f'<span style="color:{color};">{status_text}</span>'
+        )
+        if game_name:
+            self.playing_label.setText(
+                f'<span style="font-size:{small}px;font-style:italic;">'
+                f'🎮 {tr("status_playing_in")}: {game_name}</span>'
+            )
+            self.playing_label.setVisible(True)
+        else:
+            self.playing_label.setVisible(False)
+
+    def refresh_type_scale(self):
+        """Переприменяет семейство и масштаб шрифта (после смены в настройках)."""
+        from PyQt5.QtWidgets import QApplication
+        base = QApplication.instance().font()
+        fam = base.family()
+        sz = base.pointSize() or 10
+        nick = QFont(fam, max(8, sz + 2))
+        nick.setBold(True)
+        self.nickname_label.setFont(nick)
+        self.total_time_label.setFont(QFont(fam, max(8, sz - 1)))
+        self._render_status()
+
+    def set_total_time(self, hours: str, minutes: str):
+        self.total_time_label.setText(tr("total_time").format(hours, minutes))
+
+    def set_progress(self, value: int):
+        self.progress_bar.setRange(0, 100)
+        self.progress_bar.setValue(value)
+
+    def apply_theme(self, theme: str):
+        self.theme = theme
+        is_dark = theme == "dark"
+
+        text_main = "#f0f0f0" if is_dark else "#333333"
+        text_secondary = "#aaaaaa" if is_dark else "#666666"
+        avatar_bg = "#444444" if is_dark else "#f0f0f0"
+        avatar_border = "#666666" if is_dark else "#cccccc"
+
+        self.nickname_label.setStyleSheet(f"color: {text_main};")
+        self.status_label.setStyleSheet(f"color: {text_secondary}; font-size: 13px;")
+        self.playing_label.setStyleSheet(
+            f"color: {text_secondary}; font-size: 12px; font-style: italic;"
+        )
+        self.total_time_label.setStyleSheet(f"color: {text_secondary}; font-size: 12px;")
+
+        self.avatar_label.setStyleSheet(f"""
+            QLabel {{
+                border: 2px solid {avatar_border};
+                border-radius: 8px;
+                background-color: {avatar_bg};
+            }}
+        """)
+
+        self.progress_bar.setStyleSheet(f"""
+            QProgressBar {{
+                background-color: {'#444444' if is_dark else '#e8e8e8'};
+                border: none;
+                border-radius: 6px;
+                text-align: center;
+                font-size: 11px;
+                color: {text_main};
+            }}
+            QProgressBar::chunk {{
+                background-color: {'#4da6ff' if is_dark else '#0066cc'};
+                border-radius: 6px;
+            }}
+        """)
+
+        self.setStyleSheet(f"""
+            QGroupBox {{
+                color: {text_secondary};
+                font-weight: bold;
+                border: 1px solid {'#444444' if is_dark else '#e0e0e0'};
+                border-radius: 10px;
+                margin-top: 10px;
+                padding-top: 10px;
+            }}
+            QGroupBox::title {{
+                subcontrol-origin: margin;
+                left: 12px;
+                padding: 0 6px;
+            }}
+        """)
