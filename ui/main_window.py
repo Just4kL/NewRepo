@@ -8,9 +8,9 @@ from typing import Optional, List, Dict, Any
 
 from PyQt5.QtWidgets import (
     QMainWindow, QWidget, QVBoxLayout, QHBoxLayout, QLineEdit,
-    QTableWidgetItem, QMessageBox, QFileDialog, QApplication, QMenu
+    QTableWidgetItem, QMessageBox, QFileDialog, QApplication
 )
-from PyQt5.QtCore import Qt, QTimer, QThread, QSettings, QPoint
+from PyQt5.QtCore import Qt, QTimer, QThread, QSettings
 from PyQt5.QtGui import QColor, QFont
 
 from app.config import VERSION, BUILD_VERSION, AUTHOR, BUILD_DATE
@@ -297,27 +297,19 @@ class MainWindow(QMainWindow):
         self.retranslate_ui()
         self.setWindowTitle(f"{tr('app_title')} v{VERSION}")
 
-    def _build_language_menu(self):
-        """Меню выбора языка (без показа — для тестов)."""
+    def _build_language_popup(self):
+        """Material-popup языков (без показа — для тестов)."""
         from app.config import LANGUAGES
-        menu = QMenu(self)
-        for lang in LANGUAGES:
-            act = menu.addAction(f"{lang['flag']} {lang['native']}")
-            act.setCheckable(True)
-            act.setChecked(lang["name"] == self.language)
-            act.setData(lang["name"])
-            act.triggered.connect(
-                lambda checked=False, n=lang["name"]: self._apply_language(n))
-        # Видимо 6 пунктов, остальные — прокруткой (стрелки ▲▼)
-        per_item = max(1, menu.sizeHint().height() // max(1, len(LANGUAGES)))
-        menu.setMaximumHeight(per_item * 6 + 8)
-        return menu
+        from ui.language_popup import LanguagePopup
+        return LanguagePopup(LANGUAGES, self.language, self.theme,
+                             self._apply_language, self)
 
     def show_language_menu(self):
-        """Список языков вверх от глобуса: 6 видно, остальные скроллом."""
-        menu = self._build_language_menu()
-        pos = self.language_btn.mapToGlobal(QPoint(0, 0))
-        menu.exec_(QPoint(pos.x(), pos.y() - menu.sizeHint().height()))
+        """Список языков вверх от глобуса (6 строк + скролл)."""
+        popup = self._build_language_popup()
+        screen = QApplication.primaryScreen()
+        rect = screen.availableGeometry() if screen else self.geometry()
+        popup.show_above(self.language_btn, rect)
 
     def retranslate_ui(self):
         """Обновление всех текстов интерфейса."""

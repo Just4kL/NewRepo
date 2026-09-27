@@ -25,7 +25,7 @@ INTERFACE_USER = "ISteamUser"
 INTERFACE_USER_STATS = "ISteamUserStats"
 
 VERSION = "0.5.19 alpha"
-BUILD_VERSION = "0.5.19.36"  # Build +1
+BUILD_VERSION = "0.5.19.37"  # Build +1
 AUTHOR = "Kenig Theodor"
 BUILD_DATE = "2026-08-17"
 

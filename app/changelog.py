@@ -3,6 +3,14 @@
 
 CHANGELOG = [
     {
+        "version": "0.5.19 build 37 alpha",
+        "date": "2026-09-27",
+        "changes": [
+            "+ Глобус открывает Material-popup языков вместо QMenu: 6 строк + скролл, hover/selected-стили, стрелки ↑/↓, активация Space/Enter/кликом",
+            "🔧 Popup строго вверх от кнопки, у края экрана — вниз; Qt.Popup сам закрывается по клику мимо"
+        ]
+    },
+    {
         "version": "0.5.19 build 36 alpha",
         "date": "2026-09-27",
         "changes": [
