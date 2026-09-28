@@ -10,8 +10,7 @@
 """
 
 from PyQt5.QtWidgets import QWidget, QVBoxLayout, QListWidget, QListWidgetItem
-from PyQt5.QtCore import Qt, QEvent
-from PyQt5.QtGui import QKeyEvent
+from PyQt5.QtCore import Qt
 
 VISIBLE_ROWS = 6
 

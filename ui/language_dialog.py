@@ -23,12 +23,12 @@ class LanguageDialog(QDialog):
     def init_ui(self):
         self.setWindowTitle("Steam Playtime Viewer — Language Selection")
         self.setModal(True)
-        self.setFixedSize(480, 420)
+        self.setFixedSize(480, 500)
 
         self.setWindowIcon(get_app_icon())
 
         main_layout = QVBoxLayout(self)
-        main_layout.setSpacing(16)
+        main_layout.setSpacing(12)
         main_layout.setContentsMargins(24, 20, 24, 20)
 
         # ===== ИКОНКА =====
@@ -60,7 +60,7 @@ class LanguageDialog(QDialog):
 
         # ===== СПИСОК ЯЗЫКОВ =====
         self.list_widget = QListWidget()
-        self.list_widget.setFixedHeight(160)
+        self.list_widget.setFixedHeight(170)
 
         for lang in LANGUAGES:
             item = QListWidgetItem(f"{lang['flag']} {lang['native']}")
@@ -80,7 +80,10 @@ class LanguageDialog(QDialog):
         main_layout.addWidget(self.description)
 
         # ===== КНОПКИ =====
+        # Отступ от списка: кнопки не должны липнуть к QListWidget
         btn_layout = QHBoxLayout()
+        btn_layout.setContentsMargins(0, 14, 0, 0)
+        btn_layout.setSpacing(12)
         btn_layout.addStretch()
 
         self.btn_cancel = QPushButton("Отмена")
