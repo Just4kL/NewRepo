@@ -11,8 +11,12 @@ echo.
 
 cd /d "%~dp0"
 
+:: Выбор интерпретатора: сначала conda с зависимостями, иначе py
+set "PYBIN=py"
+if exist "C:\Users\Kenig\miniconda3\python.exe" set "PYBIN=C:\Users\Kenig\miniconda3\python.exe"
+
 :: Проверка Python
-python --version >nul 2>&1
+%PYBIN% --version >nul 2>&1
 if errorlevel 1 (
     echo [ОШИБКА] Python не найден.
     pause
@@ -23,7 +27,7 @@ if errorlevel 1 (
 echo Запуск приложения...
 echo.
 
-py -m main 2>&1 | findstr /C:"Traceback" >nul
+%PYBIN% -m main 2>&1 | findstr /C:"Traceback" >nul
 if not errorlevel 1 (
     echo.
     echo [ОШИБКА] Обнаружена ошибка. Сохраняем traceback...
@@ -33,7 +37,7 @@ if not errorlevel 1 (
 
     :: Сохраняем traceback
     set "LOGFILE=logs\error_%date:~-4%%date:~4,2%%date:~7,2%_%time:~0,2%%time:~3,2%%time:~6,2%.log"
-    py -m main 2> "!LOGFILE!"
+    %PYBIN% -m main 2> "!LOGFILE!"
 
     echo.
     echo Ошибка сохранена в: !LOGFILE!

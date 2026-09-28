@@ -165,6 +165,8 @@ class MainWindow(QMainWindow):
     def apply_font_settings(self):
         """Применение настроек шрифта (делегировано GUI-агрегатору)."""
         self.gui.apply_font_settings()
+        if hasattr(self, "profile_section"):
+            self._sync_card_heights()
 
     # ==================== ШРИФТ ====================
 
@@ -193,6 +195,7 @@ class MainWindow(QMainWindow):
         self.profile_section.apply_theme(theme)
         if self.games_data:
             self.show_page()
+        self._sync_card_heights()
 
     # ==================== ИНИЦИАЛИЗАЦИЯ UI ====================
 
@@ -251,6 +254,40 @@ class MainWindow(QMainWindow):
         # Стартовый размер: вписываемся в экран, а не фиксированные 1080x720
         self.resize(min(1080, max(640, self.screen_width - 80)),
                     min(720, max(480, self.screen_height - 60)))
+        # Профиль вровень с аутентификацией — после первой раскладки
+        QTimer.singleShot(0, self._sync_card_heights)
+
+    def resizeEvent(self, event):
+        super().resizeEvent(event)
+        if hasattr(self, "profile_section"):
+            self._sync_card_heights()
+
+    def _sync_card_heights(self):
+        """Выравнивает высоты карточек: обе по максимуму контента.
+
+        Профиль и аутентификация всегда одной высоты (запрос), клиппинга
+        нет — берётся максимум контентных высот, а не текущие значения
+        (иначе залипание на прошлом fixed). Вызывать после любого изменения
+        контента: показ, ресайз, язык, тема, шрифт, варнинги, прогресс.
+        """
+        try:
+            auth = self.auth_section
+            prof = self.profile_section
+        except AttributeError:
+            return
+        try:
+            auth_h = max(auth.sizeHint().height(),
+                         auth.minimumSizeHint().height())
+            prof_h = max(prof.sizeHint().height(),
+                         prof.minimumSizeHint().height())
+            target = max(auth_h, prof_h)
+            if target > 0:
+                if auth.height() != target:
+                    auth.setFixedHeight(target)
+                if prof.height() != target:
+                    prof.setFixedHeight(target)
+        except Exception:
+            pass
 
     def init_menu(self):
         """Построение меню (делегировано GUI-агрегатору)."""
@@ -326,6 +363,10 @@ class MainWindow(QMainWindow):
 
         # Кнопки
         self.profile_section.calc_btn.setText(tr("calc_btn"))
+        self.profile_section.pic_caption.setText(tr("sub_pic"))
+        self.profile_section.prof_caption.setText(tr("sub_profile"))
+        self.profile_section.calc_caption.setText(tr("sub_calc"))
+        self.profile_section.total_caption.setText(tr("sub_total"))
         self.auth_section.get_key_btn.setText(tr("get_key_btn"))  # ← добавлено
         self.auth_section.get_key_btn.setToolTip(tr("get_key_btn_tooltip"))  # ← добавлено
         self.auth_section.get_id_btn.setText(tr("get_id_btn"))
@@ -377,6 +418,9 @@ class MainWindow(QMainWindow):
         self.update_summary_labels()
         self.update_page_label()
 
+        # Тексты другой длины меняют высоту auth — ровняем профиль
+        self._sync_card_heights()
+
     def update_menu_texts(self):
         """Обновление текстов меню (делегировано GUI-агрегатору)."""
         self.gui.rebuild_menu()
@@ -403,6 +447,8 @@ class MainWindow(QMainWindow):
             )
             self.auth_section.api_key_warning.setText(tr("api_key_warning"))
             self.auth_section.api_key_warning.setVisible(True)
+        # Предупреждение меняет высоту auth — ровняем профиль
+        self._sync_card_heights()
 
     def on_steam_id_changed(self, text: str):
         self.steam_id = text
@@ -422,6 +468,7 @@ class MainWindow(QMainWindow):
             )
             self.auth_section.steam_id_warning.setText(tr("steam_id_warning"))
             self.auth_section.steam_id_warning.setVisible(True)
+        self._sync_card_heights()
 
     def toggle_key_visibility(self, checked: bool):
         self.is_key_visible = checked
@@ -551,6 +598,8 @@ class MainWindow(QMainWindow):
             self.auth_section.progress.setVisible(False)
             self.profile_section.progress_bar.setVisible(False)
             self.auth_section.status_label.setText(tr("ready"))
+        # Прогресс показался/скрылся — высота auth могла измениться
+        self._sync_card_heights()
 
     def _on_load_progress(self, done: int, total: int):
         """Слот тиков загрузки: переключает бары в детерминированный режим."""
@@ -642,6 +691,9 @@ class MainWindow(QMainWindow):
         if not self.status_refresh_timer.isActive():
             self.status_refresh_timer.start()
 
+        # playing_label мог появиться/скрыться — ровняем карточки
+        self._sync_card_heights()
+
     def refresh_user_status(self):
         """Обновляет статус Steam каждые 60 секунд."""
         if not self.api_client or not self.steam_id:
@@ -692,7 +744,7 @@ class MainWindow(QMainWindow):
         self._all_games_data = games.copy()
         self.games_data = games
         self.total_games = len(games)
-        self.total_playtime_min = sum(g["playtime_forever"] for g in games)
+        self.total_playtime_min = sum((g.get("playtime_forever") or 0) for g in games)
         # Знаменатель % — вся библиотека; поиск его не меняет, доли стабильны
         self.grand_total_min = self.total_playtime_min
         for g in games:
@@ -759,6 +811,10 @@ class MainWindow(QMainWindow):
             key = self._sort_key(self._sort_column)
             entries.sort(key=lambda e: key(self._payload(e)),
                          reverse=self._sort_reverse)
+        if self._sort_column == 8:
+            # "?" — всегда вниз при любом направлении (стабильно)
+            entries.sort(
+                key=lambda e: self._payload(e).get("last_played", "?") == "?")
         # Коммитим порядок показа обратно в плоский список
         self.games_data = [
             g for e in entries
@@ -976,6 +1032,9 @@ class MainWindow(QMainWindow):
         # включая Σ (монотонный ключ: keep/reverse).
         # Дети групп наследуют порядок плоского списка (и порядок экспорта)
         self.games_data.sort(key=key, reverse=self._sort_reverse)
+        if logicalIndex == 8:
+            # "?" — всегда вниз при любом направлении (стабильно)
+            self.games_data.sort(key=lambda x: x.get("last_played", "?") == "?")
         self.current_page = 0
         self.show_page()
 

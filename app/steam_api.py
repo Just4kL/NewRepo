@@ -338,19 +338,31 @@ class SteamAPIClient:
             if isinstance(achievements, BaseException):
                 achievements = {"unlocked": 0, "total": 0}
 
-            playtime_forever = game.get("playtime_forever", 0)
+            playtime_forever = game.get("playtime_forever") or 0
+            try:
+                playtime_forever = int(playtime_forever)
+            except (TypeError, ValueError):
+                logger.warning("Некорректное playtime_forever=%r у appid %s",
+                               game.get("playtime_forever"), game.get("appid"))
+                playtime_forever = 0
             hours_decimal = round(playtime_forever / 60, 2)
             minutes_total = round(playtime_forever, 2)
 
             rtime_acquired = game.get("rtime_acquired", 0)
             if rtime_acquired:
-                acquired = datetime.fromtimestamp(rtime_acquired).strftime("%Y-%m-%d")
+                try:
+                    acquired = datetime.fromtimestamp(rtime_acquired).strftime("%Y-%m-%d")
+                except (ValueError, OverflowError, OSError, TypeError):
+                    acquired = "?"
             else:
                 acquired = "?"
 
             rtime_last_played = game.get("rtime_last_played", 0)
             if rtime_last_played:
-                last_played = datetime.fromtimestamp(rtime_last_played).strftime("%Y-%m-%d %H:%M")
+                try:
+                    last_played = datetime.fromtimestamp(rtime_last_played).strftime("%Y-%m-%d %H:%M")
+                except (ValueError, OverflowError, OSError, TypeError):
+                    last_played = "?"
             else:
                 last_played = "?"
 

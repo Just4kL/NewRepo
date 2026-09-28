@@ -2,7 +2,7 @@
 """Секция профиля — компактная карточка с аватаром"""
 
 from PyQt5.QtWidgets import (
-    QGroupBox, QVBoxLayout, QHBoxLayout, QLabel, QPushButton,
+    QGroupBox, QVBoxLayout, QHBoxLayout, QGridLayout, QLabel, QPushButton,
     QProgressBar, QDialog, QSizePolicy
 )
 from PyQt5.QtCore import Qt, QUrl
@@ -26,34 +26,43 @@ class ProfileSection(QGroupBox):
     def init_ui(self):
         from ui.gui import DESIGN
 
-        # Карточка фиксированной высоты: рост окна ей не достаётся
+        # Потолок на случай огромных шрифтов; точную высоту задаёт
+        # MainWindow._sync_card_heights (вровень с аутентификацией)
         self.setMaximumHeight(DESIGN["profile_max_height"])
         self.setSizePolicy(QSizePolicy.Preferred, QSizePolicy.Maximum)
 
         avatar_px = DESIGN["avatar_size"]
-        btn_w, btn_h = DESIGN["action_button"]
+        _, btn_h = DESIGN["action_button"]
+        btn_min_w = 150
 
-        layout = QVBoxLayout(self)
-        layout.setSpacing(4)
-        layout.setContentsMargins(10, 8, 10, 8)
+        grid = QGridLayout(self)
+        grid.setSpacing(8)
+        grid.setContentsMargins(10, 8, 10, 8)
+        grid.setColumnStretch(0, 0)
+        grid.setColumnStretch(1, 1)
 
-        # ===== ОДНА КОМПАКТНАЯ СТРОКА =====
-        row = QHBoxLayout()
-        row.setSpacing(10)
-
-        # Аватар
+        # ===== (0,0) КАРТИНКА: аватар =====
+        pic_box = QVBoxLayout()
+        pic_box.setSpacing(2)
+        self.pic_caption = QLabel(tr("sub_pic"))
+        self.pic_caption.setStyleSheet("color: #666666; font-size: 11px;")
+        pic_box.addWidget(self.pic_caption)
         self.avatar_label = QLabel()
         self.avatar_label.setFixedSize(avatar_px, avatar_px)
         self.avatar_label.setScaledContents(True)
-        row.addWidget(self.avatar_label, 0, Qt.AlignVCenter)
+        pic_box.addWidget(self.avatar_label)
+        pic_box.addStretch(1)
+        grid.addLayout(pic_box, 0, 0)
 
-        # Информация
-        info_layout = QVBoxLayout()
-        info_layout.setSpacing(1)
-        info_layout.setAlignment(Qt.AlignVCenter)
+        # ===== (0,1) ПРОФИЛЬ: ник + статус =====
+        prof_box = QVBoxLayout()
+        prof_box.setSpacing(1)
+        self.prof_caption = QLabel(tr("sub_profile"))
+        self.prof_caption.setStyleSheet("color: #666666; font-size: 11px;")
+        prof_box.addWidget(self.prof_caption)
 
-        # Никнейм (кликабельный)
-        self.nickname_label = QLabel(tr("nickname_default"))
+        # Никнейм (кликабельный, перенос по словам и по буквам)
+        self.nickname_label = QLabel(self._wrap_text(tr("nickname_default")))
         self.nickname_label.setCursor(QCursor(Qt.PointingHandCursor))
         self.nickname_label.setWordWrap(True)
         font = QFont()
@@ -61,7 +70,7 @@ class ProfileSection(QGroupBox):
         font.setBold(True)
         self.nickname_label.setFont(font)
         self.nickname_label.mousePressEvent = self._on_nickname_clicked
-        info_layout.addWidget(self.nickname_label)
+        prof_box.addWidget(self.nickname_label)
 
         # Статус строка
         self.status_label = QLabel(
@@ -69,45 +78,58 @@ class ProfileSection(QGroupBox):
             f'<span style="color:#9e9e9e;">{tr("status_unknown")}</span>'
         )
         self.status_label.setWordWrap(True)
-        info_layout.addWidget(self.status_label)
+        prof_box.addWidget(self.status_label)
 
         # "Играет в" (скрыт по умолчанию)
         self.playing_label = QLabel("")
         self.playing_label.setWordWrap(True)
         self.playing_label.setVisible(False)
-        info_layout.addWidget(self.playing_label)
+        prof_box.addWidget(self.playing_label)
+        prof_box.addStretch(1)
+        grid.addLayout(prof_box, 0, 1)
 
-        # Общее время — единая строка
+        # ===== (1,0) ПОСЧИТАТЬ: кнопка + прогресс =====
+        calc_box = QVBoxLayout()
+        calc_box.setSpacing(4)
+        self.calc_caption = QLabel(tr("sub_calc"))
+        self.calc_caption.setStyleSheet("color: #666666; font-size: 11px;")
+        calc_box.addWidget(self.calc_caption)
+
+        self.calc_btn = QPushButton(tr("calc_btn"))
+        self.calc_btn.setObjectName("primary")
+        self.calc_btn.setFont(QFont("Segoe UI Emoji", 11))
+        self.calc_btn.setFixedHeight(btn_h)
+        self.calc_btn.setMinimumWidth(btn_min_w)
+        self.calc_btn.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Fixed)
+        self.calc_btn.setEnabled(False)
+        calc_box.addWidget(self.calc_btn)
+
+        self.progress_bar = QProgressBar()
+        self.progress_bar.setMinimumWidth(btn_min_w)
+        self.progress_bar.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Fixed)
+        self.progress_bar.setFixedHeight(14)
+        self.progress_bar.setTextVisible(True)
+        self.progress_bar.setAlignment(Qt.AlignCenter)
+        self.progress_bar.setVisible(False)
+        calc_box.addWidget(self.progress_bar)
+        calc_box.addStretch(1)
+        grid.addLayout(calc_box, 1, 0)
+
+        # ===== (1,1) ОБЩЕЕ ВРЕМЯ =====
+        total_box = QVBoxLayout()
+        total_box.setSpacing(1)
+        self.total_caption = QLabel(tr("sub_total"))
+        self.total_caption.setStyleSheet("color: #666666; font-size: 11px;")
+        total_box.addWidget(self.total_caption)
+
         self.total_time_label = QLabel("")
         self.total_time_label.setWordWrap(True)
         font_time = QFont()
         font_time.setPointSize(11)
         self.total_time_label.setFont(font_time)
-        info_layout.addWidget(self.total_time_label)
-
-        row.addLayout(info_layout, 1)
-
-        # Правая колонка: действие + прогресс
-        action_layout = QVBoxLayout()
-        action_layout.setSpacing(4)
-        action_layout.setAlignment(Qt.AlignVCenter)
-
-        self.calc_btn = QPushButton(tr("calc_btn"))
-        self.calc_btn.setObjectName("primary")
-        self.calc_btn.setFont(QFont("Segoe UI Emoji", 11))
-        self.calc_btn.setFixedSize(btn_w, btn_h)
-        self.calc_btn.setEnabled(False)
-        action_layout.addWidget(self.calc_btn)
-
-        self.progress_bar = QProgressBar()
-        self.progress_bar.setFixedSize(btn_w, 14)
-        self.progress_bar.setTextVisible(True)
-        self.progress_bar.setAlignment(Qt.AlignCenter)
-        self.progress_bar.setVisible(False)
-        action_layout.addWidget(self.progress_bar)
-
-        row.addLayout(action_layout, 0)
-        layout.addLayout(row)
+        total_box.addWidget(self.total_time_label)
+        total_box.addStretch(1)
+        grid.addLayout(total_box, 1, 1)
 
         # Сетевой менеджер для аватара создаём лениво: QNetworkAccessManager
         # тянет Qt5Network + bearer-стек ОС (~15 DLL). Нужен только тогда,
@@ -115,6 +137,11 @@ class ProfileSection(QGroupBox):
         self._nam = None
 
         self.apply_theme(self.theme)
+
+    @staticmethod
+    def _wrap_text(text: str) -> str:
+        """Невидимые точки разрыва: перенос по словам, при нужде — по буквам."""
+        return chr(8203).join(text)  # U+200B zero-width space
 
     def _on_nickname_clicked(self, event):
         if not self.steam_url:
@@ -196,7 +223,7 @@ class ProfileSection(QGroupBox):
         dialog.exec_()
 
     def set_nickname(self, nickname: str, steam_url: str = ""):
-        self.nickname_label.setText(nickname)
+        self.nickname_label.setText(self._wrap_text(nickname))
         self.steam_url = steam_url
 
     def _nam_ensure(self) -> QNetworkAccessManager:
@@ -286,6 +313,9 @@ class ProfileSection(QGroupBox):
         avatar_border = "#666666" if is_dark else "#cccccc"
 
         self.nickname_label.setStyleSheet(f"color: {text_main};")
+        for _cap in (self.pic_caption, self.prof_caption,
+                     self.calc_caption, self.total_caption):
+            _cap.setStyleSheet(f"color: {text_secondary}; font-size: 11px;")
         self.status_label.setStyleSheet(f"color: {text_secondary}; font-size: 13px;")
         self.playing_label.setStyleSheet(
             f"color: {text_secondary}; font-size: 12px; font-style: italic;"

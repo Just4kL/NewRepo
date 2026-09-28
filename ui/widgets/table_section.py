@@ -4,10 +4,11 @@
 from PyQt5.QtWidgets import (
     QGroupBox, QVBoxLayout, QHBoxLayout, QLabel, QPushButton,
     QComboBox, QTableWidget, QHeaderView, QStackedWidget, QWidget,
-    QAbstractItemView, QLineEdit, QSizePolicy
+    QAbstractItemView, QLineEdit, QSizePolicy, QMenu, QShortcut,
+    QToolTip, QApplication
 )
 from PyQt5.QtCore import Qt, QRegExp
-from PyQt5.QtGui import QFont, QRegExpValidator
+from PyQt5.QtGui import QFont, QRegExpValidator, QKeySequence, QCursor
 
 from app.i18n import tr
 
@@ -106,8 +107,9 @@ class TableSection(QGroupBox):
         # ===== НАСТРОЙКА ТАБЛИЦЫ =====
         self.table.setSortingEnabled(False)
         self.table.setEditTriggers(QAbstractItemView.NoEditTriggers)
-        self.table.setSelectionBehavior(QAbstractItemView.SelectRows)
-        self.table.setSelectionMode(QAbstractItemView.SingleSelection)
+        # 1 клик — ячейка, 2 клика — вся строка (см. _on_item_double_clicked)
+        self.table.setSelectionBehavior(QAbstractItemView.SelectItems)
+        self.table.setSelectionMode(QAbstractItemView.ExtendedSelection)
         self.table.setAlternatingRowColors(True)
         self.table.setShowGrid(True)
         self.table.verticalHeader().setVisible(False)
@@ -119,6 +121,14 @@ class TableSection(QGroupBox):
 
         # Таблица растягивается
         self.table.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
+
+        # Двойной клик — выделить всю строку; Ctrl+C и меню — скопировать
+        self.table.cellDoubleClicked.connect(self._on_item_double_clicked)
+        self.table.setContextMenuPolicy(Qt.CustomContextMenu)
+        self.table.customContextMenuRequested.connect(self._show_context_menu)
+        self._copy_shortcut = QShortcut(QKeySequence("Ctrl+C"), self.table)
+        self._copy_shortcut.setContext(Qt.WidgetWithChildrenShortcut)
+        self._copy_shortcut.activated.connect(self.copy_selection)
 
         # Стиль заголовка
         self.table.horizontalHeader().setStyleSheet("""
@@ -206,3 +216,76 @@ class TableSection(QGroupBox):
     def update_empty_state(self):
         """Переключает таблицу и заглушку в зависимости от наличия строк."""
         self.stack.setCurrentIndex(0 if self.table.rowCount() else 1)
+
+    # ==================== ВЫДЕЛЕНИЕ И КОПИРОВАНИЕ ====================
+
+    def _on_item_double_clicked(self, row: int, _col: int):
+        """Двойной клик — выделить всю строку."""
+        if 0 <= row < self.table.rowCount():
+            self.table.selectRow(row)
+
+    def _visible_text(self, row: int, col: int) -> str:
+        item = self.table.item(row, col)
+        return item.text() if item is not None else ""
+
+    def selected_table_text(self) -> str:
+        """Текст выделения TSV (скрытые колонки пропускаются)."""
+        table = self.table
+        idxs = [i for i in table.selectedIndexes()
+                if not table.isColumnHidden(i.column())]
+        if not idxs and table.currentRow() >= 0 and table.currentColumn() >= 0:
+            idx = table.model().index(table.currentRow(), table.currentColumn())
+            if not table.isColumnHidden(idx.column()):
+                idxs = [idx]
+        rows = {}
+        for i in sorted(idxs, key=lambda x: (x.row(), x.column())):
+            rows.setdefault(i.row(), []).append(i.data() or "")
+        return "\n".join("\t".join(r) for _, r in sorted(rows.items()))
+
+    def row_text(self, row: int) -> str:
+        """Вся строка TSV (видимые колонки)."""
+        table = self.table
+        if not (0 <= row < table.rowCount()):
+            return ""
+        return "\t".join(
+            self._visible_text(row, c)
+            for c in range(table.columnCount())
+            if not table.isColumnHidden(c)
+        )
+
+    def _notify_copied(self):
+        QToolTip.showText(QCursor.pos(), tr("copied_to_clipboard"))
+
+    def copy_selection(self) -> str:
+        """Копирует выделение (или текущую ячейку) + уведомление."""
+        text = self.selected_table_text()
+        if not text:
+            return ""
+        QApplication.clipboard().setText(text)
+        self._notify_copied()
+        return text
+
+    def copy_row(self, row: int) -> str:
+        """Копирует целую строку + уведомление."""
+        text = self.row_text(row)
+        if not text:
+            return ""
+        QApplication.clipboard().setText(text)
+        self._notify_copied()
+        return text
+
+    def context_menu(self, pos) -> QMenu:
+        """Контекстное меню таблицы (без показа — для тестов)."""
+        menu = QMenu(self)
+        cell_act = menu.addAction(tr("ctx_copy"))
+        row_act = menu.addAction(tr("ctx_copy_row"))
+        row = self.table.rowAt(pos.y())
+        if row < 0:
+            row = self.table.currentRow()
+        cell_act.triggered.connect(self.copy_selection)
+        row_act.triggered.connect(lambda: self.copy_row(row))
+        return menu
+
+    def _show_context_menu(self, pos):
+        menu = self.context_menu(pos)
+        menu.exec_(self.table.viewport().mapToGlobal(pos))

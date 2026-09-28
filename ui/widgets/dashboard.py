@@ -51,13 +51,28 @@ class GripHandle(QLabel):
         if self._drag_start is not None:
             dist = (event.pos() - self._drag_start).manhattanLength()
             if dist >= QApplication.startDragDistance():
-                drag = QDrag(self)
-                mime = QMimeData()
-                mime.setData(CARD_MIME, self.card_id.encode("utf-8"))
-                drag.setMimeData(mime)
+                drag = self._build_drag()
                 drag.exec_(Qt.MoveAction)
                 self._drag_start = None
         super().mouseMoveEvent(event)
+
+    def _build_drag(self):
+        """QDrag с живым скриншотом карточки (без exec — для тестов)."""
+        from PyQt5.QtCore import QPoint
+        card = self.parentWidget()
+        drag = QDrag(self)
+        mime = QMimeData()
+        mime.setData(CARD_MIME, self.card_id.encode("utf-8"))
+        drag.setMimeData(mime)
+        try:
+            pix = card.grab()
+            if not pix.isNull():
+                drag.setPixmap(pix)
+                drag.setHotSpot(QPoint(self.x() + self._drag_start.x(),
+                                       self.y() + self._drag_start.y()))
+        except Exception:
+            pass
+        return drag
 
     def mouseReleaseEvent(self, event):
         self._drag_start = None

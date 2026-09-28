@@ -12,15 +12,20 @@ import re
 _SPLIT_RE = re.compile(r"\s*[:|–—]\s*|\s+-\s+|\s+\(")
 # Висячий номер/том в конце: "Borderlands 2", "Civilization VI", "FIFA 24"
 _TRAILING_NUM_RE = re.compile(r"\s+(\d+|[IVXLCDM]+)$", re.IGNORECASE)
-# Висячее название издания: "Skyrim Special Edition", "Metro 2033 Redux"
+# Висячее название издания: "Skyrim Special Edition", "Metro 2033 Redux",
+# "Grand Theft Auto V Enhanced" / "... Legacy" (одна игра, разные билды).
+# Снимается только с КОНЦА, поэтому "Legacy of Kain" не пострадает.
 _EDITION_SUFFIXES = (
     "game of the year edition",
+    "game of the year",
     "definitive edition",
     "complete edition",
     "enhanced edition",
     "legendary edition",
     "special edition",
     "anniversary edition",
+    "standard edition",
+    "premium edition",
     "deluxe edition",
     "ultimate edition",
     "gold edition",
@@ -28,6 +33,7 @@ _EDITION_SUFFIXES = (
     "remastered",
     "remake",
     "enhanced",
+    "legacy",
     "redux",
     "collection",
     "hd",
@@ -109,12 +115,12 @@ def _known_max(values):
 
 def aggregate_group(name, members):
     """Агрегат группы той же формы, что игра."""
-    playtime = sum(m.get("playtime_forever", 0) for m in members)
-    unlocked = sum(m.get("achievements", {}).get("unlocked", 0) for m in members)
-    total = sum(m.get("achievements", {}).get("total", 0) for m in members)
+    playtime = sum((m.get("playtime_forever") or 0) for m in members)
+    unlocked = sum((m.get("achievements") or {}).get("unlocked", 0) for m in members)
+    total = sum((m.get("achievements") or {}).get("total", 0) for m in members)
     methods = {m.get("acquire_method", "?") for m in members}
     return {
-        "appid": min([m.get("appid", 0) for m in members] or [0]),
+        "appid": min([(m.get("appid") or 0) for m in members] or [0]),
         "name": name,
         "hours": round(playtime / 60, 2),
         "minutes": round(float(playtime), 2),
