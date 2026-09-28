@@ -3,6 +3,14 @@
 
 CHANGELOG = [
     {
+        "version": "0.5.19 build 39 alpha",
+        "date": "2026-09-28",
+        "changes": [
+            "+ Описание программы в окне «О программе» на 15 языках",
+            "+ Набор SVG-иконок трея (dark/light) и генератор tools/build_icons.py"
+        ]
+    },
+    {
         "version": "0.5.19 build 38 alpha",
         "date": "2026-09-27",
         "changes": [
