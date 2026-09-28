@@ -20,3 +20,9 @@ Actual_footprint_Steam_playtime_viewer/
 # IDE
 .idea/
 .vscode/
+
+main.dist/
+main.build/
+main.onefile-build/
+smoke_out.txt
+
