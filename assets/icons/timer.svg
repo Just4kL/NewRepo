@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <!-- заводная головка -->
+  <rect x="20.5" y="3.5" width="7" height="4.5" rx="1.8" stroke="#F2D492" stroke-width="2.6"/>
+  <path d="M24 8 V11.5" stroke="#F2D492" stroke-width="2.6"/>
+  <!-- боковая кнопка -->
+  <path d="M34.5 10.5 L37.5 7.5" stroke="#E6E6E6" stroke-width="3"/>
+  <!-- корпус секундомера -->
+  <circle cx="23" cy="27.5" r="13" fill="#1B2B2B" stroke="#E6E6E6" stroke-width="3"/>
+  <!-- риски -->
+  <path d="M23 17.5 V20 M33 27.5 H30.5 M23 37.5 V35 M13 27.5 H15.5" stroke="#B8B8B8" stroke-width="2.4"/>
+  <!-- дуга прогресса -->
+  <path d="M23 17.5 A10 10 0 0 1 31.6 22.5" stroke="#2EB5A5" stroke-width="3"/>
+  <!-- стрелка -->
+  <path d="M23 27.5 V19.5" stroke="#F2D492" stroke-width="2.8"/>
+  <circle cx="23" cy="27.5" r="1.8" fill="#2EB5A5" stroke="none"/>
+  <!-- фирменная точка -->
+  <rect x="36" y="36" width="3" height="3" fill="#FF6B6B" stroke="none"/>
+</svg>

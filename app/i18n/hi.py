@@ -103,6 +103,7 @@ TRANSLATIONS_HI = {
     "dlg_font_style_bold_italic": "मोटा तिरछा",
     "dlg_font_preview": "Steam Playtime Viewer",
     "dlg_about_title": "परिचय",
+    "about_description": "Steam खेल समय आँकड़े देखने हेतु डेस्कटॉप ऐप: खेल लाइब्रेरी, कुल समय, उपलब्धियां और CSV/XLSX निर्यात।",
     "dlg_changelog_title": "बदलाव इतिहास",
     "dlg_docs_title": "दस्तावेज़",
     "dlg_shortcuts_title": "शॉर्टकट",

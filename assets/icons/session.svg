@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <!-- окно игры/программы -->
+  <rect x="5" y="7" width="28" height="20" rx="5" stroke="#E6E6E6" stroke-width="3"/>
+  <circle cx="11.5" cy="13" r="1.4" fill="#FF6B6B" stroke="none"/>
+  <circle cx="16.5" cy="13" r="1.4" fill="#F2D492" stroke="none"/>
+  <!-- play -->
+  <path d="M18.5 17.5 L25.5 21.5 L18.5 25.5 Z" fill="#F2D492" stroke="#F2D492" stroke-width="2"/>
+  <!-- бейдж-часы сессии -->
+  <circle cx="32" cy="32" r="10" fill="#1B2B2B" stroke="#2EB5A5" stroke-width="3"/>
+  <path d="M32 27.2 V32 L35.8 34" stroke="#E6E6E6" stroke-width="2.5"/>
+  <circle cx="32" cy="32" r="1.4" fill="#2EB5A5" stroke="none"/>
+  <!-- фирменные пиксели -->
+  <rect x="38" y="7" width="3.4" height="3.4" fill="#FFD95A" stroke="none"/>
+  <rect x="6" y="33" width="2.6" height="2.6" fill="#E6E6E6" stroke="none" opacity="0.9"/>
+</svg>

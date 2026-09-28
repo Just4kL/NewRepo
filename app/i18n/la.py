@@ -103,6 +103,7 @@ TRANSLATIONS_LA = {
     "dlg_font_style_bold_italic": "Pingus inclinatus",
     "dlg_font_preview": "Steam Playtime Viewer",
     "dlg_about_title": "De programmate",
+    "about_description": "Applicatio ad statistica temporis lusorii Steam videnda: bibliotheca ludorum, tempus totum, acta et exportatio CSV/XLSX.",
     "dlg_changelog_title": "Historia mutationum",
     "dlg_docs_title": "Documenta",
     "dlg_shortcuts_title": "Compendia",

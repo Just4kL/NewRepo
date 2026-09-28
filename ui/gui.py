@@ -17,6 +17,7 @@ from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QFont
 
 from app.i18n import tr
+from app.resources import get_section_icon
 from ui.styles import apply_theme as _apply_theme, get_app_styles
 from ui import dialogs as _dialogs
 from ui.shortcuts import init_shortcuts as _init_shortcuts
@@ -98,6 +99,7 @@ class Gui:
     def build_menu(self):
         """Строит главное меню (Файл / Настройки / Справка)."""
         w = self._w
+        theme = getattr(w, "theme", "dark")
         menubar = w.menuBar()
 
         # Файл
@@ -130,6 +132,7 @@ class Gui:
         dark_action.triggered.connect(lambda: w.set_theme("dark"))
         theme_menu.addAction(dark_action)
         font_action = QAction(tr("menu_font"), w)
+        font_action.setIcon(get_section_icon("settings", theme))
         font_action.triggered.connect(lambda: self.show_dialog("font"))
         settings_menu.addAction(font_action)
 
@@ -148,14 +151,17 @@ class Gui:
         # Справка
         help_menu = menubar.addMenu(tr("menu_help"))
         about_action = QAction(tr("menu_about"), w)
+        about_action.setIcon(get_section_icon("about_tray", theme))
         about_action.setShortcut("F1")
         about_action.triggered.connect(lambda: self.show_dialog("about"))
         help_menu.addAction(about_action)
         changelog_action = QAction(tr("menu_changelog"), w)
+        changelog_action.setIcon(get_section_icon("session", theme))
         changelog_action.setShortcut("F2")
         changelog_action.triggered.connect(lambda: self.show_dialog("changelog"))
         help_menu.addAction(changelog_action)
         docs_action = QAction(tr("menu_docs"), w)
+        docs_action.setIcon(get_section_icon("games", theme))
         docs_action.setShortcut("F3")
         docs_action.triggered.connect(lambda: self.show_dialog("docs"))
         help_menu.addAction(docs_action)

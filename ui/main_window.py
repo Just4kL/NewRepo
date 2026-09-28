@@ -189,6 +189,7 @@ class MainWindow(QMainWindow):
         self.theme = theme
         self.gui.apply_theme(theme)
         self.gui.apply_font_settings()
+        self.gui.rebuild_menu()  # иконки меню: вариант под фон темы
         self.profile_section.apply_theme(theme)
         if self.games_data:
             self.show_page()

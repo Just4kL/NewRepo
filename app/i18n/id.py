@@ -103,6 +103,7 @@ TRANSLATIONS_ID = {
     "dlg_font_style_bold_italic": "Tebal miring",
     "dlg_font_preview": "Steam Playtime Viewer",
     "dlg_about_title": "Tentang",
+    "about_description": "Aplikasi desktop untuk melihat statistik waktu bermain Steam: pustaka game, total waktu, pencapaian dan ekspor CSV/XLSX.",
     "dlg_changelog_title": "Riwayat",
     "dlg_docs_title": "Dokumentasi",
     "dlg_shortcuts_title": "Pintasan",

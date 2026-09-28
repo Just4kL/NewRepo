@@ -322,7 +322,8 @@ def about_html(parent) -> str:
             .icon-container {{ text-align: center; margin-bottom: 15px; }}
             .icon-container img {{ width: 100px; height: 100px; }}
             .title {{ font-size: {pt + 8}pt; font-weight: bold; margin-bottom: 5px; }}
-            .year {{ font-size: {pt + 1}pt; color: {pal['muted']}; margin-bottom: 20px; }}
+            .year {{ font-size: {pt + 1}pt; color: {pal['muted']}; margin-bottom: 12px; }}
+            .description {{ font-size: {pt + 1}pt; color: {pal['text']}; margin: 0 auto 16px auto; max-width: 420px; }}
             .info-table {{ margin: 0 auto; border-collapse: collapse; min-width: 300px; }}
             .info-table td {{ padding: 6px 10px; font-size: {pt + 1}pt; text-align: left; }}
             .label {{ font-weight: bold; }}
@@ -338,6 +339,7 @@ def about_html(parent) -> str:
         </div>
         <div class="title">{tr('app_title')}</div>
         <div class="year">© 2026</div>
+        <div class="description">{tr('about_description')}</div>
         <table class="info-table">
             <tr><td class="label">{tr('author_label')}:</td><td><a href="https://goo.su/vTQAn">Kenig Theodor</a></td></tr>
             <tr><td class="label">{tr('build_date_label')}:</td><td>{parent.BUILD_DATE}</td></tr>

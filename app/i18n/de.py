@@ -103,6 +103,7 @@ TRANSLATIONS_DE = {
     "dlg_font_style_bold_italic": "Fett kursiv",
     "dlg_font_preview": "Steam Playtime Viewer",
     "dlg_about_title": "Über",
+    "about_description": "Desktop-App zur Anzeige von Steam-Spielzeitstatistiken: Spielebibliothek, Gesamtzeit, Erfolge und CSV/XLSX-Export.",
     "dlg_changelog_title": "Änderungsverlauf",
     "dlg_docs_title": "Dokumentation",
     "dlg_shortcuts_title": "Tastenkürzel",

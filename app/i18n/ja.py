@@ -103,6 +103,7 @@ TRANSLATIONS_JA = {
     "dlg_font_style_bold_italic": "太字斜体",
     "dlg_font_preview": "Steam Playtime Viewer",
     "dlg_about_title": "このアプリについて",
+    "about_description": "Steamのプレイ時間統計を見るデスクトップアプリ:ゲームライブラリ、合計時間、実績、CSV/XLSX保存。",
     "dlg_changelog_title": "更新履歴",
     "dlg_docs_title": "ドキュメント",
     "dlg_shortcuts_title": "ショートカット",

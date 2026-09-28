@@ -103,6 +103,7 @@ TRANSLATIONS_AR = {
     "dlg_font_style_bold_italic": "عريض مائل",
     "dlg_font_preview": "Steam Playtime Viewer",
     "dlg_about_title": "عن البرنامج",
+    "about_description": "تطبيق سطح مكتب لعرض إحصائيات وقت لعب Steam: المكتبة والوقت الإجمالي والإنجازات والتصدير إلى CSV/XLSX.",
     "dlg_changelog_title": "سجل التغييرات",
     "dlg_docs_title": "التوثيق",
     "dlg_shortcuts_title": "الاختصارات",

@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <!-- колокола -->
+  <path d="M13.5 19 C10.5 16 9 12 10.5 9.5 C12 7 16 7.8 18.2 11" stroke="#F2D492" stroke-width="3"/>
+  <path d="M34.5 19 C37.5 16 39 12 37.5 9.5 C36 7 32 7.8 29.8 11" stroke="#F2D492" stroke-width="3"/>
+  <!-- молоточек -->
+  <path d="M24 4.5 V11" stroke="#E6E6E6" stroke-width="3"/>
+  <circle cx="24" cy="5" r="1.6" fill="#E6E6E6" stroke="none"/>
+  <!-- корпус -->
+  <circle cx="24" cy="27" r="11.5" fill="#1B2B2B" stroke="#E6E6E6" stroke-width="3"/>
+  <!-- стрелки -->
+  <path d="M24 27 V20.5" stroke="#2EB5A5" stroke-width="2.8"/>
+  <path d="M24 27 L28.5 29.5" stroke="#E6E6E6" stroke-width="2.8"/>
+  <circle cx="24" cy="27" r="1.5" fill="#F2D492" stroke="none"/>
+  <!-- ножки -->
+  <path d="M17 36.5 L14 41.5" stroke="#E6E6E6" stroke-width="3"/>
+  <path d="M31 36.5 L34 41.5" stroke="#E6E6E6" stroke-width="3"/>
+</svg>

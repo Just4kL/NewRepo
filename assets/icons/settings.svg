@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <!-- панель слайдеров -->
+  <rect x="5" y="6" width="24" height="36" rx="6" stroke="#E6E6E6" stroke-width="3"/>
+  <path d="M10 15 H24 M10 24 H24 M10 33 H24" stroke="#5A5A5A" stroke-width="2.6"/>
+  <circle cx="16" cy="15" r="3" fill="#1B2B2B" stroke="#2EB5A5" stroke-width="2.6"/>
+  <circle cx="21" cy="24" r="3" fill="#1B2B2B" stroke="#F2D492" stroke-width="2.6"/>
+  <circle cx="15" cy="33" r="3" fill="#1B2B2B" stroke="#2EB5A5" stroke-width="2.6"/>
+  <!-- бейдж-шестерёнка -->
+  <circle cx="33.5" cy="33.5" r="9" fill="#1B2B2B" stroke="#E6E6E6" stroke-width="3"/>
+  <!-- зубцы -->
+  <path d="M33.5 22.5 V25 M33.5 42 V44.5 M22.5 33.5 H25 M42 33.5 H44.5 M25.8 25.8 L27.5 27.5 M39.5 39.5 L41.2 41.2 M41.2 25.8 L39.5 27.5 M27.5 39.5 L25.8 41.2" stroke="#E6E6E6" stroke-width="2.4"/>
+  <circle cx="33.5" cy="33.5" r="3.2" stroke="#2EB5A5" stroke-width="2.6"/>
+</svg>

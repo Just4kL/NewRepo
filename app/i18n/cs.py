@@ -103,6 +103,7 @@ TRANSLATIONS_CS = {
     "dlg_font_style_bold_italic": "Tučná kurzíva",
     "dlg_font_preview": "Steam Playtime Viewer",
     "dlg_about_title": "O programu",
+    "about_description": "Desktopová aplikace pro statistiky herního času Steam: knihovna her, celkový čas, úspěchy a export do CSV/XLSX.",
     "dlg_changelog_title": "Historie změn",
     "dlg_docs_title": "Dokumentace",
     "dlg_shortcuts_title": "Klávesové zkratky",

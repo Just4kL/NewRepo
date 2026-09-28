@@ -103,6 +103,7 @@ TRANSLATIONS_ZH = {
     "dlg_font_style_bold_italic": "粗斜体",
     "dlg_font_preview": "Steam Playtime Viewer",
     "dlg_about_title": "关于",
+    "about_description": "查看 Steam 游戏时长统计的桌面应用:游戏库、总时长、成就以及 CSV/XLSX 导出。",
     "dlg_changelog_title": "更新日志",
     "dlg_docs_title": "文档",
     "dlg_shortcuts_title": "快捷键",
