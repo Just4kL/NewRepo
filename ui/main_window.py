@@ -256,6 +256,11 @@ class MainWindow(QMainWindow):
                     min(720, max(480, self.screen_height - 60)))
         # Профиль вровень с аутентификацией — после первой раскладки
         QTimer.singleShot(0, self._sync_card_heights)
+        # Dev-overlay направляющих: только под SPV_GUIDES=1, иначе no-op
+        import os as _os
+        if _os.environ.get("SPV_GUIDES") == "1":
+            from ui.dev_overlay import install_guides
+            install_guides(self)
 
     def resizeEvent(self, event):
         super().resizeEvent(event)

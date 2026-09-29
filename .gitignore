@@ -26,3 +26,6 @@ main.build/
 main.onefile-build/
 smoke_out.txt
 
+# Локальная тестовая песочница (сьюты, изоляция, сборки) — не в репозиторий
+temp_test/
+
