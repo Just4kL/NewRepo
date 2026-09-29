@@ -47,24 +47,22 @@ class ProfileSection(QGroupBox):
         self.setMaximumHeight(DESIGN["profile_max_height"])
         self.setSizePolicy(QSizePolicy.Preferred, QSizePolicy.Maximum)
 
-        avatar_px = DESIGN["avatar_size"]
-        _, btn_h = DESIGN["action_button"]
         tokens = _layout_tokens()
+        avatar_px = tokens["component"]["avatar"]
+        _, btn_h = DESIGN["action_button"]
         btn_min_w = tokens["component"]["button_min_w"]
         icon_px = tokens["space"]["lg"]
+        edge = tokens["edge"]["safe"]
 
         grid = QGridLayout(self)
-        grid.setSpacing(8)
-        grid.setContentsMargins(10, 8, 10, 8)
+        grid.setSpacing(tokens["space"]["sm"])
+        grid.setContentsMargins(edge, edge, edge, edge)
         grid.setColumnStretch(0, 0)
         grid.setColumnStretch(1, 1)
 
         # ===== (0,0) КАРТИНКА: аватар =====
         pic_box = QVBoxLayout()
         pic_box.setSpacing(2)
-        self.pic_caption = QLabel(tr("sub_pic"))
-        self.pic_caption.setStyleSheet("color: #666666; font-size: 11px;")
-        pic_box.addWidget(self.pic_caption)
         self.avatar_label = QLabel()
         self.avatar_label.setFixedSize(avatar_px, avatar_px)
         self.avatar_label.setScaledContents(True)
@@ -75,9 +73,6 @@ class ProfileSection(QGroupBox):
         # ===== (0,1) ПРОФИЛЬ: ник + статус =====
         prof_box = QVBoxLayout()
         prof_box.setSpacing(1)
-        self.prof_caption = QLabel(tr("sub_profile"))
-        self.prof_caption.setStyleSheet("color: #666666; font-size: 11px;")
-        prof_box.addWidget(self.prof_caption)
 
         # Никнейм (кликабельный, перенос по словам и по буквам)
         self.nickname_label = QLabel(self._wrap_text(tr("nickname_default")))
@@ -108,10 +103,7 @@ class ProfileSection(QGroupBox):
 
         # ===== (1,0) ПОСЧИТАТЬ: кнопка + прогресс =====
         calc_box = QVBoxLayout()
-        calc_box.setSpacing(4)
-        self.calc_caption = QLabel(tr("sub_calc"))
-        self.calc_caption.setStyleSheet("color: #666666; font-size: 11px;")
-        calc_box.addWidget(self.calc_caption)
+        calc_box.setSpacing(tokens["space"]["sm"])
 
         self.calc_btn = QPushButton(tr("calc_btn_short"))
         self.calc_btn.setObjectName("primary")
@@ -127,7 +119,7 @@ class ProfileSection(QGroupBox):
         self.progress_bar = QProgressBar()
         self.progress_bar.setMinimumWidth(btn_min_w)
         self.progress_bar.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Fixed)
-        self.progress_bar.setFixedHeight(14)
+        self.progress_bar.setFixedHeight(tokens["space"]["lg"])
         self.progress_bar.setTextVisible(True)
         self.progress_bar.setAlignment(Qt.AlignCenter)
         self.progress_bar.setVisible(False)
@@ -138,9 +130,6 @@ class ProfileSection(QGroupBox):
         # ===== (1,1) ОБЩЕЕ ВРЕМЯ =====
         total_box = QVBoxLayout()
         total_box.setSpacing(1)
-        self.total_caption = QLabel(tr("sub_total"))
-        self.total_caption.setStyleSheet("color: #666666; font-size: 11px;")
-        total_box.addWidget(self.total_caption)
 
         self.total_time_label = QLabel("")
         self.total_time_label.setWordWrap(True)
@@ -266,8 +255,7 @@ class ProfileSection(QGroupBox):
             data = reply.readAll()
             pixmap = QPixmap()
             if pixmap.loadFromData(data):
-                from ui.gui import DESIGN
-                avatar_px = DESIGN["avatar_size"]
+                avatar_px = _layout_tokens()["component"]["avatar"]
                 scaled = pixmap.scaled(
                     avatar_px, avatar_px,
                     Qt.KeepAspectRatioByExpanding, Qt.SmoothTransformation
@@ -334,9 +322,6 @@ class ProfileSection(QGroupBox):
         avatar_border = "#666666" if is_dark else "#cccccc"
 
         self.nickname_label.setStyleSheet(f"color: {text_main};")
-        for _cap in (self.pic_caption, self.prof_caption,
-                     self.calc_caption, self.total_caption):
-            _cap.setStyleSheet(f"color: {text_secondary}; font-size: 11px;")
         self.status_label.setStyleSheet(f"color: {text_secondary}; font-size: 13px;")
         self.playing_label.setStyleSheet(
             f"color: {text_secondary}; font-size: 12px; font-style: italic;"

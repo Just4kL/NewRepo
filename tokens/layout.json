@@ -30,7 +30,7 @@
     "lg": 10
   },
   "component": {
-    "avatar": 48,
+    "avatar": 64,
     "button_w": 200,
     "button_h": 32,
     "button_min_w": 184,

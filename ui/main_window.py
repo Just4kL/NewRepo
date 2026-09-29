@@ -368,10 +368,6 @@ class MainWindow(QMainWindow):
 
         # Кнопки
         self.profile_section.calc_btn.setText(tr("calc_btn_short"))
-        self.profile_section.pic_caption.setText(tr("sub_pic"))
-        self.profile_section.prof_caption.setText(tr("sub_profile"))
-        self.profile_section.calc_caption.setText(tr("sub_calc"))
-        self.profile_section.total_caption.setText(tr("sub_total"))
         self.auth_section.get_key_btn.setText(tr("get_key_btn"))  # ← добавлено
         self.auth_section.get_key_btn.setToolTip(tr("get_key_btn_tooltip"))  # ← добавлено
         self.auth_section.get_id_btn.setText(tr("get_id_btn"))
