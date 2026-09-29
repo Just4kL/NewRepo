@@ -265,6 +265,8 @@ class Gui:
         """Создаёт QApplication с базовыми настройками оболочки."""
         QApplication.setAttribute(Qt.AA_EnableHighDpiScaling, True)
         QApplication.setAttribute(Qt.AA_UseHighDpiPixmaps, True)
+        QApplication.setHighDpiScaleFactorRoundingPolicy(
+            Qt.HighDpiScaleFactorRoundingPolicy.PassThrough)
         app = QApplication(argv)
         app.setStyle(QStyleFactory.create("Fusion"))
         app.setFont(QFont("Segoe UI Semibold", 12))
