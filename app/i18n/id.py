@@ -46,7 +46,7 @@ TRANSLATIONS_ID = {
     "check_btn_tooltip": "Periksa",
     "profile_group": "👤 Profil",
     "calc_btn": "🚀 Hitung waktu",
-    "calc_btn_short": "Calculate",
+    "calc_btn_short": "Hitung",
     "total_time": "⏱️ Total waktu: {} jam {} mnt",
     "status_online": "🟢 Online",
     "status_offline": "⚫ Offline",

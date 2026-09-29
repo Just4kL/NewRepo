@@ -46,7 +46,7 @@ TRANSLATIONS_AR = {
     "check_btn_tooltip": "تحقق",
     "profile_group": "👤 الملف",
     "calc_btn": "🚀 حساب الوقت",
-    "calc_btn_short": "Calculate",
+    "calc_btn_short": "احسب",
     "total_time": "⏱️ الوقت الإجمالي: {} س {} د",
     "status_online": "🟢 متصل",
     "status_offline": "⚫ غير متصل",

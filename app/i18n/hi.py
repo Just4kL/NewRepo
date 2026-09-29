@@ -46,7 +46,7 @@ TRANSLATIONS_HI = {
     "check_btn_tooltip": "जाँचें",
     "profile_group": "👤 प्रोफ़ाइल",
     "calc_btn": "🚀 समय गिनें",
-    "calc_btn_short": "Calculate",
+    "calc_btn_short": "गिनो",
     "total_time": "⏱️ कुल समय: {} घंटे {} मिनट",
     "status_online": "🟢 ऑनलाइन",
     "status_offline": "⚫ ऑफ़लाइन",

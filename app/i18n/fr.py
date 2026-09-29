@@ -46,7 +46,7 @@ TRANSLATIONS_FR = {
     "check_btn_tooltip": "Vérifier",
     "profile_group": "👤 Profil",
     "calc_btn": "🚀 Calculer le temps",
-    "calc_btn_short": "Calculate",
+    "calc_btn_short": "Calculer",
     "total_time": "⏱️ Temps total : {} h {} min",
     "status_online": "🟢 En ligne",
     "status_offline": "⚫ Hors ligne",

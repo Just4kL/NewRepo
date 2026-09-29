@@ -46,7 +46,7 @@ TRANSLATIONS_JA = {
     "check_btn_tooltip": "確認",
     "profile_group": "👤 プロフィール",
     "calc_btn": "🚀 時間を計算",
-    "calc_btn_short": "Calculate",
+    "calc_btn_short": "計算",
     "total_time": "⏱️ 合計時間:{}時間 {}分",
     "status_online": "🟢 オンライン",
     "status_offline": "⚫ オフライン",
