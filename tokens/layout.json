@@ -1,0 +1,56 @@
+{
+  "_note": "Единственный источник чисел лейаута. Базовая единица 4px. Правила — в docs/layout-grid.md. Магические числа в коде запрещены: нет числа в токенах — сначала добавь токен.",
+  "meta": {
+    "unit": 4,
+    "unit_name": "px"
+  },
+  "space": {
+    "none": 0,
+    "hairline": 2,
+    "xs": 4,
+    "sm": 8,
+    "md": 12,
+    "lg": 16,
+    "xl": 24,
+    "2xl": 32,
+    "3xl": 48,
+    "4xl": 64
+  },
+  "edge": {
+    "safe": 8
+  },
+  "grid": {
+    "columns": 2,
+    "ratio": [3, 2],
+    "gutter": 8
+  },
+  "radius": {
+    "sm": 6,
+    "md": 8,
+    "lg": 10
+  },
+  "component": {
+    "avatar": 48,
+    "button_w": 200,
+    "button_h": 32,
+    "button_min_w": 150,
+    "dialog_btn_h": 36,
+    "dialog_btn_w": 100,
+    "dialog_btn_w_wide": 120,
+    "chrome_btn": [36, 30],
+    "footer_max_h": 40,
+    "profile_max_h": 176,
+    "search_min_h": 26,
+    "search_w": 250,
+    "rows_combo_w": 70,
+    "page_btn": [64, 32],
+    "grip": [18, 18]
+  },
+  "breakpoint": {
+    "narrow": 900
+  },
+  "overlay": {
+    "guide_color": "#ff00ff",
+    "error_color": "#ff0000"
+  }
+}
