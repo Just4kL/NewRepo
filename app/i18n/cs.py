@@ -46,6 +46,7 @@ TRANSLATIONS_CS = {
     "check_btn_tooltip": "Ověřit",
     "profile_group": "👤 Profil",
     "calc_btn": "🚀 Spočítat čas",
+    "calc_btn_short": "Calculate",
     "total_time": "⏱️ Celkový čas: {} h {} min",
     "status_online": "🟢 Online",
     "status_offline": "⚫ Offline",

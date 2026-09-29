@@ -46,6 +46,7 @@ TRANSLATIONS_LA = {
     "check_btn_tooltip": "Probari",
     "profile_group": "👤 Forma",
     "calc_btn": "🚀 Tempus computare",
+    "calc_btn_short": "Calculate",
     "total_time": "⏱️ Tempus totum: {} h {} min",
     "status_online": "🟢 Praesens",
     "status_offline": "⚫ Absens",

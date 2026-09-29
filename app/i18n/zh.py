@@ -46,6 +46,7 @@ TRANSLATIONS_ZH = {
     "check_btn_tooltip": "验证",
     "profile_group": "👤 个人资料",
     "calc_btn": "🚀 计算时间",
+    "calc_btn_short": "Calculate",
     "total_time": "⏱️ 总时长:{} 小时 {} 分钟",
     "status_online": "🟢 在线",
     "status_offline": "⚫ 离线",

@@ -367,7 +367,7 @@ class MainWindow(QMainWindow):
         self.table_section.search_input.setPlaceholderText(tr("search_placeholder"))
 
         # Кнопки
-        self.profile_section.calc_btn.setText(tr("calc_btn"))
+        self.profile_section.calc_btn.setText(tr("calc_btn_short"))
         self.profile_section.pic_caption.setText(tr("sub_pic"))
         self.profile_section.prof_caption.setText(tr("sub_profile"))
         self.profile_section.calc_caption.setText(tr("sub_calc"))
@@ -741,11 +741,11 @@ class MainWindow(QMainWindow):
     def on_games_loaded(self, games: List[Dict[str, Any]]):
         if games is None:
             self.profile_section.calc_btn.setEnabled(True)
-            self.profile_section.calc_btn.setText(tr("calc_btn"))
+            self.profile_section.calc_btn.setText(tr("calc_btn_short"))
             self.set_busy_state(False)
             return
         self.profile_section.calc_btn.setEnabled(True)
-        self.profile_section.calc_btn.setText(tr("calc_btn"))
+        self.profile_section.calc_btn.setText(tr("calc_btn_short"))
         self._all_games_data = games.copy()
         self.games_data = games
         self.total_games = len(games)
@@ -767,7 +767,7 @@ class MainWindow(QMainWindow):
 
     def on_games_error(self, error):
         self.profile_section.calc_btn.setEnabled(True)
-        self.profile_section.calc_btn.setText(tr("calc_btn"))
+        self.profile_section.calc_btn.setText(tr("calc_btn_short"))
         QMessageBox.critical(self, tr("dlg_error"),
                              tr("error_load_games").format(self._describe_error(error)))
 

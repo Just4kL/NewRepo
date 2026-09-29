@@ -5,11 +5,27 @@ from PyQt5.QtWidgets import (
     QGroupBox, QVBoxLayout, QHBoxLayout, QGridLayout, QLabel, QPushButton,
     QProgressBar, QDialog, QSizePolicy
 )
-from PyQt5.QtCore import Qt, QUrl
+from PyQt5.QtCore import Qt, QUrl, QSize
 from PyQt5.QtGui import QFont, QCursor, QPixmap, QDesktopServices
 from PyQt5.QtNetwork import QNetworkAccessManager, QNetworkRequest
 
 from app.i18n import tr
+from app.resources import get_section_icon
+
+
+_LAYOUT_TOKENS = None
+
+
+def _layout_tokens():
+    """Токены лейаута из tokens/layout.json — в коде магических чисел нет."""
+    global _LAYOUT_TOKENS
+    if _LAYOUT_TOKENS is None:
+        import json
+        import os
+        root = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+        with open(os.path.join(root, "tokens", "layout.json"), encoding="utf-8") as fh:
+            _LAYOUT_TOKENS = json.load(fh)
+    return _LAYOUT_TOKENS
 
 
 class ProfileSection(QGroupBox):
@@ -33,7 +49,9 @@ class ProfileSection(QGroupBox):
 
         avatar_px = DESIGN["avatar_size"]
         _, btn_h = DESIGN["action_button"]
-        btn_min_w = 150
+        tokens = _layout_tokens()
+        btn_min_w = tokens["component"]["button_min_w"]
+        icon_px = tokens["space"]["lg"]
 
         grid = QGridLayout(self)
         grid.setSpacing(8)
@@ -95,9 +113,11 @@ class ProfileSection(QGroupBox):
         self.calc_caption.setStyleSheet("color: #666666; font-size: 11px;")
         calc_box.addWidget(self.calc_caption)
 
-        self.calc_btn = QPushButton(tr("calc_btn"))
+        self.calc_btn = QPushButton(tr("calc_btn_short"))
         self.calc_btn.setObjectName("primary")
         self.calc_btn.setFont(QFont("Segoe UI Emoji", 11))
+        self.calc_btn.setIcon(get_section_icon("timer", self.theme))
+        self.calc_btn.setIconSize(QSize(icon_px, icon_px))
         self.calc_btn.setFixedHeight(btn_h)
         self.calc_btn.setMinimumWidth(btn_min_w)
         self.calc_btn.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Fixed)
@@ -306,6 +326,7 @@ class ProfileSection(QGroupBox):
     def apply_theme(self, theme: str):
         self.theme = theme
         is_dark = theme == "dark"
+        self.calc_btn.setIcon(get_section_icon("timer", theme))
 
         text_main = "#f0f0f0" if is_dark else "#333333"
         text_secondary = "#aaaaaa" if is_dark else "#666666"
