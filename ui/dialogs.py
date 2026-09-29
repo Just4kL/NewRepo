@@ -264,6 +264,9 @@ def show_font_dialog(parent) -> bool:
     cancel_btn.clicked.connect(dialog.reject)
     accept_btn.clicked.connect(dialog.accept)
 
+    from ui.gui import Gui  # локально против циклов (gui импортирует dialogs)
+    Gui.fit_buttons(dialog)
+
     if dialog.exec_() == QDialog.Accepted:
         parent.font_family = font_combo.currentFont().family()
         parent.font_size = size_spin.value()
@@ -373,9 +376,12 @@ def show_about_dialog(parent):
     layout.addWidget(browser)
 
     close_btn = QPushButton(tr("dlg_close"))
-    close_btn.setFixedHeight(35)
+    close_btn.setMinimumHeight(36)
     close_btn.clicked.connect(dialog.accept)
     layout.addWidget(close_btn, alignment=Qt.AlignCenter)
+
+    from ui.gui import Gui  # локально против циклов (gui импортирует dialogs)
+    Gui.fit_buttons(dialog)
 
     dialog.exec_()
 
@@ -420,6 +426,8 @@ def show_changelog_dialog(parent):
     close_btn = QPushButton(tr("dlg_close"))
     close_btn.clicked.connect(dialog.accept)
     layout.addWidget(close_btn, alignment=Qt.AlignCenter)
+    from ui.gui import Gui  # локально против циклов (gui импортирует dialogs)
+    Gui.fit_buttons(dialog)
     dialog.exec_()
 
 
@@ -623,6 +631,8 @@ def show_documentation_dialog(parent):
     btn_layout.addStretch()
 
     layout.addLayout(btn_layout)
+    from ui.gui import Gui  # локально против циклов (gui импортирует dialogs)
+    Gui.fit_buttons(dialog)
     dialog.exec_()
 
 def shortcuts_html(theme: str = "light") -> str:
@@ -664,6 +674,8 @@ def show_shortcuts_dialog(parent):
     close_btn = QPushButton(tr("dlg_close"))
     close_btn.clicked.connect(dialog.accept)
     layout.addWidget(close_btn, alignment=Qt.AlignCenter)
+    from ui.gui import Gui  # локально против циклов (gui импортирует dialogs)
+    Gui.fit_buttons(dialog)
     dialog.exec_()
 
 
@@ -801,6 +813,9 @@ def _build_legal_dialog(parent=None):
     # Если текст влез без прокрутки — разрешаем сразу (после раскладки)
     QTimer.singleShot(500, _on_scroll)
     checkbox.toggled.connect(lambda checked: accept_btn.setEnabled(checked))
+
+    from ui.gui import Gui  # локально против циклов (gui импортирует dialogs)
+    Gui.fit_buttons(dialog)
 
     return dialog, browser, checkbox, accept_btn, hint
 

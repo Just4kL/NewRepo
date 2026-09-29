@@ -11,21 +11,7 @@ from PyQt5.QtNetwork import QNetworkAccessManager, QNetworkRequest
 
 from app.i18n import tr
 from app.resources import get_section_icon
-
-
-_LAYOUT_TOKENS = None
-
-
-def _layout_tokens():
-    """Токены лейаута из tokens/layout.json — в коде магических чисел нет."""
-    global _LAYOUT_TOKENS
-    if _LAYOUT_TOKENS is None:
-        import json
-        import os
-        root = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-        with open(os.path.join(root, "tokens", "layout.json"), encoding="utf-8") as fh:
-            _LAYOUT_TOKENS = json.load(fh)
-    return _LAYOUT_TOKENS
+from app.layout_tokens import tokens as _layout_tokens
 
 
 class ProfileSection(QGroupBox):
@@ -110,7 +96,7 @@ class ProfileSection(QGroupBox):
         self.calc_btn.setFont(QFont("Segoe UI Emoji", 11))
         self.calc_btn.setIcon(get_section_icon("timer", self.theme))
         self.calc_btn.setIconSize(QSize(icon_px, icon_px))
-        self.calc_btn.setFixedHeight(btn_h)
+        self.calc_btn.setMinimumHeight(btn_h)
         self.calc_btn.setMinimumWidth(btn_min_w)
         self.calc_btn.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Fixed)
         self.calc_btn.setEnabled(False)
@@ -229,6 +215,8 @@ class ProfileSection(QGroupBox):
             }}
         """)
         no_btn.setObjectName("secondary")
+        from ui.gui import Gui  # локально против циклов
+        Gui.fit_buttons(dialog)
         dialog.exec_()
 
     def set_nickname(self, nickname: str, steam_url: str = ""):

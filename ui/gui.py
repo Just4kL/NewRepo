@@ -93,6 +93,52 @@ class Gui:
         # перерисовываем типографику профиля под новый шрифт
         if hasattr(w, "profile_section"):
             w.profile_section.refresh_type_scale()
+        self.fit_button_heights()
+
+    def fit_button_heights(self, root=None):
+        """Высоты кнопок от шрифта (Баг 3).
+
+        Текст (QPushButton): max(минимум, fm.height() + 2*component.button_pad_y).
+        Иконки (QToolButton, QSS-padding 0): max(минимум, fm.height()).
+        setMinimumSize сам инвалидирует layout — updateGeometry не нужен.
+        QCheckBox/QRadioButton не трогаем (своя семантика).
+        """
+        from app.layout_tokens import tokens
+        pad = tokens()["component"]["button_pad_y"]
+        Gui.fit_buttons(root if root is not None else self._w, pad)
+
+    @staticmethod
+    def fit_buttons(root, pad=None):
+        """Подогнать высоты кнопок под их шрифты (root: окно или диалог).
+
+        want <= design-минимума: фиксируем (дефолтный вид пиксель-в-пиксель).
+        want больше: минимум + снятие потолка. Design-минимум запоминаем
+        в свойстве при первом проходе (до первого роста).
+        """
+        from PyQt5.QtWidgets import QPushButton, QToolButton, QWIDGETSIZE_MAX
+        from PyQt5.QtGui import QFontMetrics
+        if pad is None:
+            from app.layout_tokens import tokens
+            pad = tokens()["component"]["button_pad_y"]
+        for btn in root.findChildren((QPushButton, QToolButton)):
+            stored = btn.property("designMinH")
+            if stored is None:
+                stored = btn.minimumHeight()
+                btn.setProperty("designMinH", stored)
+            dmin = int(stored)
+            fm_h = QFontMetrics(btn.font()).height()
+            if isinstance(btn, QPushButton):
+                want = max(dmin, fm_h + 2 * pad)
+            else:
+                want = max(dmin, fm_h)
+            if dmin > 0 and want <= dmin:
+                if btn.minimumHeight() != dmin or btn.maximumHeight() != dmin:
+                    btn.setFixedHeight(dmin)
+            else:
+                if btn.minimumHeight() != want:
+                    btn.setMinimumHeight(want)
+                if btn.maximumHeight() < want:
+                    btn.setMaximumHeight(QWIDGETSIZE_MAX)
 
     # ==================== МЕНЮ ====================
 
@@ -195,7 +241,7 @@ class Gui:
         """Кнопка-глобус: открывает список языков вверх (6 + прокрутка)."""
         btn = QToolButton()
         btn.setText("🌐")
-        btn.setFixedSize(36, 30)
+        btn.setMinimumSize(36, 30)
         btn.setToolTip(tr("change_language_tooltip"))
         btn.setStyleSheet("""
             QToolButton {
@@ -221,7 +267,7 @@ class Gui:
         btn = QToolButton()
         btn.setCheckable(True)
         btn.setChecked(dashboard.is_edit_mode())
-        btn.setFixedSize(36, 30)
+        btn.setMinimumSize(36, 30)
         btn.toggled.connect(self._on_layout_toggled)
         self._layout_btn = btn
         self.retranslate_chrome()

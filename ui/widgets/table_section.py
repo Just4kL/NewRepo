@@ -183,7 +183,7 @@ class TableSection(QGroupBox):
 
         # Кнопка предыдущей страницы
         self.prev_btn = QPushButton("◀")
-        self.prev_btn.setFixedSize(64, 32)
+        self.prev_btn.setMinimumSize(64, 32)
         self.prev_btn.setToolTip(tr("prev_btn_tooltip"))
         pagination_layout.addWidget(self.prev_btn)
 
@@ -194,7 +194,7 @@ class TableSection(QGroupBox):
 
         # Кнопка следующей страницы
         self.next_btn = QPushButton("▶")
-        self.next_btn.setFixedSize(64, 32)
+        self.next_btn.setMinimumSize(64, 32)
         self.next_btn.setToolTip(tr("next_btn_tooltip"))
         pagination_layout.addWidget(self.next_btn)
 

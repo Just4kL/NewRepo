@@ -110,7 +110,7 @@ class MovableCard(QWidget):
         self.collapse_btn.setObjectName("CollapseButton")
         self.collapse_btn.setText("–")
         self.collapse_btn.setAutoRaise(True)
-        self.collapse_btn.setFixedSize(18, 18)
+        self.collapse_btn.setMinimumSize(16, 16)
         self.collapse_btn.clicked.connect(self.toggle_collapsed)
         header.addWidget(self.collapse_btn)
         outer.addLayout(header)

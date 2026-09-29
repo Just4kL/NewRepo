@@ -6,18 +6,15 @@
 виджеты, чьи margins/spacing вне шкалы tokens/layout.json.
 """
 
-import json
-import pathlib
-
 from PyQt5.QtCore import QObject, QEvent, Qt
 from PyQt5.QtGui import QColor, QPainter, QPen
 from PyQt5.QtWidgets import QWidget
 
-ROOT = pathlib.Path(__file__).resolve().parent.parent
+from app.layout_tokens import tokens as _layout_tokens
 
 
 def load_tokens():
-    return json.loads((ROOT / "tokens" / "layout.json").read_text(encoding="utf-8"))
+    return _layout_tokens()
 
 
 class GuidesOverlay(QWidget):

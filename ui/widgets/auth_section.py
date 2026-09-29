@@ -55,13 +55,13 @@ class AuthSection(QGroupBox):
         self.eye_btn = QPushButton("🔒")
         self.eye_btn.setCheckable(True)
         self.eye_btn.setFont(QFont("Segoe UI Emoji", 14))
-        self.eye_btn.setFixedHeight(28)
+        self.eye_btn.setMinimumHeight(28)
         self.eye_btn.setToolTip(tr("eye_btn_tooltip_hide"))
         api_buttons.addWidget(self.eye_btn)
 
         self.get_key_btn = QPushButton(tr("get_key_btn"))
         self.get_key_btn.setFont(QFont("Segoe UI Emoji", 12))
-        self.get_key_btn.setFixedHeight(28)
+        self.get_key_btn.setMinimumHeight(28)
         self.get_key_btn.setToolTip(tr("get_key_btn_tooltip"))
         self.get_key_btn.clicked.connect(
             lambda: QDesktopServices.openUrl(QUrl(STEAM_API_KEY_URL))
@@ -71,7 +71,7 @@ class AuthSection(QGroupBox):
         self.check_api_btn = QPushButton(tr("check_btn"))
         self.check_api_btn.setObjectName("primary")
         self.check_api_btn.setFont(QFont("Segoe UI Emoji", 12))
-        self.check_api_btn.setFixedHeight(28)
+        self.check_api_btn.setMinimumHeight(28)
         self.check_api_btn.setToolTip(tr("check_btn_tooltip"))
         api_buttons.addWidget(self.check_api_btn)
 
@@ -110,7 +110,7 @@ class AuthSection(QGroupBox):
 
         self.get_id_btn = QPushButton(tr("get_id_btn"))
         self.get_id_btn.setObjectName("secondary")
-        self.get_id_btn.setFixedHeight(28)
+        self.get_id_btn.setMinimumHeight(28)
         self.get_id_btn.setToolTip(tr("get_id_btn_tooltip"))
         self.get_id_btn.clicked.connect(
             lambda: QDesktopServices.openUrl(QUrl(STEAM_ID_URL))
@@ -120,7 +120,7 @@ class AuthSection(QGroupBox):
         self.check_steam_btn = QPushButton(tr("check_btn"))
         self.check_steam_btn.setObjectName("primary")
         self.check_steam_btn.setFont(QFont("Segoe UI Emoji", 12))
-        self.check_steam_btn.setFixedHeight(28)
+        self.check_steam_btn.setMinimumHeight(28)
         self.check_steam_btn.setToolTip(tr("check_btn_tooltip"))
         steam_buttons.addWidget(self.check_steam_btn)
 

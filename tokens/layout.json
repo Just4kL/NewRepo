@@ -1,5 +1,5 @@
 {
-  "_note": "Единственный источник чисел лейаута. Базовая единица 4px. Правила — в docs/layout-grid.md. Магические числа в коде запрещены: нет числа в токенах — сначала добавь токен.",
+  "_note": "Единственный источник чисел лейаута. База 4px. Правила в docs/layout-grid.md. button_pad_y дублирует QPushButton padding из ui/styles.py (синхронизация вручную).",
   "meta": {
     "unit": 4,
     "unit_name": "px"
@@ -31,6 +31,7 @@
   },
   "component": {
     "avatar": 64,
+    "button_pad_y": 6,
     "button_w": 200,
     "button_h": 32,
     "button_min_w": 184,

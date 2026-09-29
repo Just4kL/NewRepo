@@ -19,6 +19,8 @@ class LanguageDialog(QDialog):
         self.selected_language = "Русский"
         self.init_ui()
         self.apply_styles()
+        from ui.gui import Gui  # локально против циклов
+        Gui.fit_buttons(self)
 
     def init_ui(self):
         self.setWindowTitle("Steam Playtime Viewer — Language Selection")
@@ -87,12 +89,12 @@ class LanguageDialog(QDialog):
         btn_layout.addStretch()
 
         self.btn_cancel = QPushButton("Отмена")
-        self.btn_cancel.setFixedSize(120, 40)
+        self.btn_cancel.setMinimumSize(120, 40)
         self.btn_cancel.clicked.connect(self.reject)
         btn_layout.addWidget(self.btn_cancel)
 
         self.btn_continue = QPushButton("Продолжить →")
-        self.btn_continue.setFixedSize(140, 40)
+        self.btn_continue.setMinimumSize(140, 40)
         self.btn_continue.setDefault(True)
         self.btn_continue.clicked.connect(self.accept)
         btn_layout.addWidget(self.btn_continue)
