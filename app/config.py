@@ -24,8 +24,18 @@ INTERFACE_PLAYER = "IPlayerService"
 INTERFACE_USER = "ISteamUser"
 INTERFACE_USER_STATS = "ISteamUserStats"
 
-VERSION = "0.5.19 alpha"
-BUILD_VERSION = "0.5.20-beta.1"  # SemVer, pre-release
+BUILD_VERSION = "0.5.20-beta.1"  # SemVer, единственный источник
+
+
+def _human_version(bv: str) -> str:
+    """'0.5.20-beta.1' → '0.5.20 beta'; '0.5.20' → '0.5.20'."""
+    if "-" not in bv:
+        return bv
+    base, pre = bv.split("-", 1)
+    return f"{base} {pre.split('.')[0]}"
+
+
+VERSION = _human_version(BUILD_VERSION)  # вычисляется, не хардкодится
 AUTHOR = "Kenig Theodor"
 BUILD_DATE = "2026-08-17"
 
