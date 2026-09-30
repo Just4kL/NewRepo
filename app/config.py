@@ -25,7 +25,7 @@ INTERFACE_USER = "ISteamUser"
 INTERFACE_USER_STATS = "ISteamUserStats"
 
 VERSION = "0.5.19 alpha"
-BUILD_VERSION = "0.5.19.42"  # Build +1
+BUILD_VERSION = "0.5.20-beta.1"  # SemVer, pre-release
 AUTHOR = "Kenig Theodor"
 BUILD_DATE = "2026-08-17"
 

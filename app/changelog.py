@@ -3,6 +3,22 @@
 
 CHANGELOG = [
     {
+        "version": "0.5.20-beta.1",
+        "date": "2026-09-30",
+        "changes": [
+            "+ Кнопка «Посчитать время» — иконка таймера + короткий текст ×12 языков (la → en fallback)",
+            "− Удалены неиспользуемые подписи sub_pic / sub_profile / sub_calc / sub_total ×15 (60 строк)",
+            "+ XLSX — формат экспорта по умолчанию (Ctrl+E); CSV — второй пункт меню Файл",
+            "+ Высота кнопок от шрифта: auth 28, calc 32, chrome 36×30, диалоги 36/40, collapse 16",
+            "+ HiDPI PassThrough rounding — текст не размывается на 125/150%",
+            "+ Профиль: тотал «N ч (M м)» — часы и тотал минут",
+            "🔧 CSV: разделитель «;» — RU-Excel открывает по столбцам",
+            "🔧 Frozen-сборка: data-files tokens/layout.json, icon.png, assets/icons/*",
+            "= Токены лейаута — единый ридер app/layout_tokens.py",
+            "− Удалён мёртвый WPF Application.sln"
+        ]
+    },
+    {
         "version": "0.5.19 build 42 alpha",
         "date": "2026-09-29",
         "changes": [
