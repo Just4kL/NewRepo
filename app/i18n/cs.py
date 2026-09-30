@@ -47,7 +47,7 @@ TRANSLATIONS_CS = {
     "profile_group": "👤 Profil",
     "calc_btn": "🚀 Spočítat čas",
     "calc_btn_short": "Spočítej",
-    "total_time": "⏱️ Celkový čas: {} h {} min",
+    "total_time": "⏱️ Celkový čas: {} h ({} min)",
     "status_online": "🟢 Online",
     "status_offline": "⚫ Offline",
     "status_busy": "🟡 Zaneprázdněn",

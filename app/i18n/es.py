@@ -47,7 +47,7 @@ TRANSLATIONS_ES = {
     "profile_group": "👤 Perfil",
     "calc_btn": "🚀 Calcular tiempo",
     "calc_btn_short": "Calcular",
-    "total_time": "⏱️ Tiempo total: {} h {} min",
+    "total_time": "⏱️ Tiempo total: {} h ({} min)",
     "status_online": "🟢 En línea",
     "status_offline": "⚫ Desconectado",
     "status_busy": "🟡 Ocupado",

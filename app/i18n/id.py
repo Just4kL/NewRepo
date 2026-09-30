@@ -47,7 +47,7 @@ TRANSLATIONS_ID = {
     "profile_group": "👤 Profil",
     "calc_btn": "🚀 Hitung waktu",
     "calc_btn_short": "Hitung",
-    "total_time": "⏱️ Total waktu: {} jam {} mnt",
+    "total_time": "⏱️ Total waktu: {} jam ({} mnt)",
     "status_online": "🟢 Online",
     "status_offline": "⚫ Offline",
     "status_busy": "🟡 Sibuk",

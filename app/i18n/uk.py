@@ -47,7 +47,7 @@ TRANSLATIONS_UK = {
     "profile_group": "👤 Профіль",
     "calc_btn": "🚀 Порахувати час",
     "calc_btn_short": "Порахуй",
-    "total_time": "⏱️ Загальний час: {} год {} хв",
+    "total_time": "⏱️ Загальний час: {} год ({} хв)",
     "status_online": "🟢 У мережі",
     "status_offline": "⚫ Не в мережі",
     "status_busy": "🟡 Зайнятий",

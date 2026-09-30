@@ -768,6 +768,7 @@ class MainWindow(QMainWindow):
                              tr("error_load_games").format(self._describe_error(error)))
 
     def update_summary_labels(self):
+        # Фича: показываем ТОТАЛ часов и ТОТАЛ минут (не остаток % 60).
         total_hours = round(self.total_playtime_min / 60, 2)
         hours_int = int(total_hours)
         mins_int = int(self.total_playtime_min)
