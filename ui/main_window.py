@@ -1185,7 +1185,7 @@ class MainWindow(QMainWindow):
             return
         try:
             with open(filepath, 'w', newline='', encoding='utf-8-sig') as f:
-                writer = csv.writer(f)
+                writer = csv.writer(f, delimiter=';')
                 headers, rows = self._export_table(numeric=False)
                 writer.writerow(headers)
                 writer.writerows(rows)
